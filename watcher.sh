@@ -7,6 +7,8 @@ main="ShapeOrColour"
 
 #record profile log while running elm live
 #watcher="unbuffer node --prof -- `which elm-live` ${main}.elm --output=elm.js"
+#inspect in dev tools while running elm live
+#watcher="unbuffer node --inspect -- `which elm-live` ${main}.elm --output=elm.js"
 
 #just run elm-live
 watcher="unbuffer elm-live ${main}.elm --output=elm.js"
