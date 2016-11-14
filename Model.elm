@@ -33,21 +33,40 @@ initialBoard =
 
 
 type Piece
-    = Piece
+    = Piece Colouring Symbol
+
+
+type Colouring
+    = Plain
+    | Coloured
+
+
+type Symbol
+    = X
+    | O
 
 
 type alias Rack =
-    {}
+    { plain : Int
+    , coloured : Int
+    }
 
 
 initialRack : Rack
 initialRack =
-    {}
+    { plain = 8
+    , coloured = 8
+    }
 
 
 removeFromRack : Piece -> Rack -> Rack
 removeFromRack piece rack =
-    rack
+    case piece of
+        Piece Plain _ ->
+            { rack | plain = max 0 (rack.plain - 1) }
+
+        Piece Coloured _ ->
+            { rack | coloured = max 0 (rack.coloured - 1) }
 
 
 type BoardId
