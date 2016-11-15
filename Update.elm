@@ -12,13 +12,13 @@ update msg model =
         NewGame ->
             ( Model.defaultModel, Cmd.none )
 
-        Place BoardId ->
+        Place boardId ->
             case model.selected of
                 Just piece ->
                     let
                         newModel =
                             { model
-                                | board = Model.place piece BoardId model.board
+                                | board = Model.place piece boardId model.board
                                 , rack = Model.removeFromRack piece model.rack
                                 , selected = Nothing
                             }

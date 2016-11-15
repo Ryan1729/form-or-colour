@@ -1,7 +1,7 @@
 module View exposing (view)
 
 import MaterialModel exposing (MaterialModel)
-import Model exposing (Model, Piece, Board, GameState(..))
+import Model exposing (..)
 import Html exposing (Html, text)
 import Html.App
 import Html.Attributes
@@ -64,7 +64,91 @@ gameStateToString gameState =
 
 renderBoard : Maybe Piece -> Board -> Svg Msg
 renderBoard selected board =
-    Svg.text "board"
+    let
+        spaces =
+            renderSpaces selected board
+    in
+        (Svg.path
+            [ d
+                <| ("M " ++ threeFifthsBoardWidthString ++ " 0 ")
+                ++ ("L " ++ boardWidthString ++ " " ++ twoFifthsBoardHeightString)
+                ++ ("L " ++ twoFifthsBoardWidthString ++ " " ++ boardHeightString)
+                ++ ("L 0 " ++ threeFifthsBoardHeightString)
+                ++ "Z"
+            ]
+            []
+        )
+            :: spaces
+            |> g []
+
+
+renderSpaces selected board =
+    Model.boardIdPossibilities
+        |> List.map
+            (\boardId ->
+                renderSpace selected (Model.getSpace boardId board) (getSpaceCoords boardId)
+            )
+
+
+renderSpace : Maybe Piece -> Space -> ( Float, Float ) -> Svg Msg
+renderSpace selected space ( x, y ) =
+    case space of
+        EmptySpace ->
+            Svg.text ""
+
+        Space piece ->
+            PieceView.renderPiece piece x y
+
+
+getSpaceCoords boardId =
+    case boardId of
+        ZeroZero ->
+            ( centerX, centerY )
+
+        OneZero ->
+            ( centerX, centerY )
+
+        TwoZero ->
+            ( centerX, centerY )
+
+        ThreeZero ->
+            ( centerX, centerY )
+
+        ZeroOne ->
+            ( centerX, centerY )
+
+        OneOne ->
+            ( centerX, centerY )
+
+        TwoOne ->
+            ( centerX, centerY )
+
+        ThreeOne ->
+            ( centerX, centerY )
+
+        ZeroTwo ->
+            ( centerX, centerY )
+
+        OneTwo ->
+            ( centerX, centerY )
+
+        TwoTwo ->
+            ( centerX, centerY )
+
+        ThreeTwo ->
+            ( centerX, centerY )
+
+        ZeroThree ->
+            ( centerX, centerY )
+
+        OneThree ->
+            ( centerX, centerY )
+
+        TwoThree ->
+            ( centerX, centerY )
+
+        ThreeThree ->
+            ( centerX, centerY )
 
 
 boardWidth =
@@ -87,5 +171,29 @@ centerX =
     boardWidth / 2
 
 
+centerXString =
+    toString centerX
+
+
 centerY =
     boardHeight / 2
+
+
+centerYString =
+    toString centerY
+
+
+twoFifthsBoardWidthString =
+    toString (boardWidth * 2 / 5)
+
+
+threeFifthsBoardWidthString =
+    toString (boardWidth * 3 / 5)
+
+
+twoFifthsBoardHeightString =
+    toString (boardHeight * 2 / 5)
+
+
+threeFifthsBoardHeightString =
+    toString (boardHeight * 3 / 5)
