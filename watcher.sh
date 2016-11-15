@@ -5,13 +5,18 @@
 
 main="ShapeOrColour"
 
+#installed version
+# elmLive=`which elm-live`
+# my local fork
+elmLive="/opt/lampp/htdocs/elm-live/bin/elm-live.js"
+
 #record profile log while running elm live
-#watcher="unbuffer node --prof -- `which elm-live` ${main}.elm --output=elm.js"
+#watcher="unbuffer node --prof -- $elmLive ${main}.elm --output=elm.js"
 #inspect in dev tools while running elm live
-#watcher="unbuffer node --inspect -- `which elm-live` ${main}.elm --output=elm.js"
+#watcher="unbuffer node --inspect -- $elmLive ${main}.elm --output=elm.js"
 
 #just run elm-live
-watcher="unbuffer elm-live ${main}.elm --output=elm.js"
+watcher="unbuffer $elmLive ${main}.elm --output=elm.js"
 
 # Upon exit, set the terminal title
 trap "echo -e \"\e]0;closed\a\"" EXIT
