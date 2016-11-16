@@ -103,52 +103,52 @@ renderSpace selected space ( x, y ) =
 getSpaceCoords boardId =
     case boardId of
         ZeroZero ->
-            ( centerX, centerY )
+            ( centerX, boardHeight * 1 / 5 )
 
         OneZero ->
-            ( centerX, centerY )
+            ( boardWidth * 3 / 5, boardHeight * 3 / 10 )
 
         TwoZero ->
-            ( centerX, centerY )
+            ( boardWidth * 7 / 10, boardHeight * 2 / 5 )
 
         ThreeZero ->
-            ( centerX, centerY )
+            ( boardWidth * 4 / 5, centerY )
 
         ZeroOne ->
-            ( centerX, centerY )
+            ( boardWidth * 2 / 5, boardHeight * 3 / 10 )
 
         OneOne ->
-            ( centerX, centerY )
+            ( centerX, boardHeight * 2 / 5 )
 
         TwoOne ->
-            ( centerX, centerY )
+            ( boardWidth * 3 / 5, centerY )
 
         ThreeOne ->
-            ( centerX, centerY )
+            ( boardWidth * 7 / 10, boardHeight * 3 / 5 )
 
         ZeroTwo ->
-            ( centerX, centerY )
+            ( boardWidth * 3 / 10, boardHeight * 2 / 5 )
 
         OneTwo ->
-            ( centerX, centerY )
+            ( boardWidth * 2 / 5, centerY )
 
         TwoTwo ->
-            ( centerX, centerY )
+            ( centerX, boardHeight * 3 / 5 )
 
         ThreeTwo ->
-            ( centerX, centerY )
+            ( boardWidth * 3 / 5, boardHeight * 7 / 10 )
 
         ZeroThree ->
-            ( centerX, centerY )
+            ( boardWidth / 5, centerY )
 
         OneThree ->
-            ( centerX, centerY )
+            ( boardWidth * 3 / 10, boardHeight * 3 / 5 )
 
         TwoThree ->
-            ( centerX, centerY )
+            ( boardWidth * 2 / 5, boardHeight * 7 / 10 )
 
         ThreeThree ->
-            ( centerX, centerY )
+            ( centerX, boardHeight * 4 / 5 )
 
 
 boardWidth =
@@ -197,3 +197,19 @@ twoFifthsBoardHeightString =
 
 threeFifthsBoardHeightString =
     toString (boardHeight * 3 / 5)
+
+
+threeTenthsBoardWidthString =
+    toString (boardWidth * 3 / 10)
+
+
+sevenTenthsBoardWidthString =
+    toString (boardWidth * 7 / 10)
+
+
+threeTenthsBoardHeightString =
+    toString (boardHeight * 3 / 10)
+
+
+sevenTenthsBoardHeightString =
+    toString (boardHeight * 7 / 10)
