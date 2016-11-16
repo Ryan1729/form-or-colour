@@ -9,7 +9,7 @@ import MaterialMsg exposing (MaterialMsg(Mdl, U))
 import Msg exposing (Msg(..))
 import Material.Button as Button
 import Material.Grid as Grid exposing (Device(..))
-import Svg exposing (Svg, svg, rect, path, Attribute, ellipse, g)
+import Svg exposing (Svg, svg, rect, path, circle, Attribute, ellipse, g)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (onClick)
 import PieceView
@@ -86,18 +86,44 @@ renderSpaces selected board =
     Model.boardIdPossibilities
         |> List.map
             (\boardId ->
-                renderSpace selected (Model.getSpace boardId board) (getSpaceCoords boardId)
+                renderSpace selected boardId (Model.getSpace boardId board) (getSpaceCoords boardId)
             )
 
 
-renderSpace : Maybe Piece -> Space -> ( Float, Float ) -> Svg Msg
-renderSpace selected space ( x, y ) =
-    case space of
-        EmptySpace ->
-            Svg.text ""
+renderSpace : Maybe Piece -> BoardId -> Space -> ( Float, Float ) -> Svg Msg
+renderSpace selected boardId space ( x, y ) =
+    let
+        piece =
+            case space of
+                EmptySpace ->
+                    Svg.text ""
 
-        Space piece ->
-            PieceView.renderPiece piece x y
+                Space piece ->
+                    PieceView.renderPiece piece x y
+
+        spaceAttriutes =
+            case selected of
+                Just _ ->
+                    [ onClick (Place boardId) ]
+
+                Nothing ->
+                    []
+    in
+        [ circle
+            ([ cx (toString x)
+             , cy (toString y)
+             , r <| toString (PieceView.halfPieceWidth + 15)
+             , fill "#888888"
+             , fillOpacity "0.25"
+             , strokeWidth "4"
+             , stroke "#888888"
+             ]
+                ++ spaceAttriutes
+            )
+            []
+        , piece
+        ]
+            |> g []
 
 
 getSpaceCoords boardId =
@@ -197,19 +223,3 @@ twoFifthsBoardHeightString =
 
 threeFifthsBoardHeightString =
     toString (boardHeight * 3 / 5)
-
-
-threeTenthsBoardWidthString =
-    toString (boardWidth * 3 / 10)
-
-
-sevenTenthsBoardWidthString =
-    toString (boardWidth * 7 / 10)
-
-
-threeTenthsBoardHeightString =
-    toString (boardHeight * 3 / 10)
-
-
-sevenTenthsBoardHeightString =
-    toString (boardHeight * 7 / 10)

@@ -11,7 +11,7 @@ type alias Model =
 
 defaultModel =
     { board = initialBoard
-    , selected = Nothing
+    , selected = Just (Piece Plain X)
     , rack = initialRack
     , gameState = InProgress
     }
@@ -45,39 +45,22 @@ type alias Board =
 
 initialBoard : Board
 initialBoard =
-    -- { zeroZero = EmptySpace
-    -- , oneZero = EmptySpace
-    -- , twoZero = EmptySpace
-    -- , threeZero = EmptySpace
-    -- , zeroOne = EmptySpace
-    -- , oneOne = EmptySpace
-    -- , twoOne = EmptySpace
-    -- , threeOne = EmptySpace
-    -- , zeroTwo = EmptySpace
-    -- , oneTwo = EmptySpace
-    -- , twoTwo = EmptySpace
-    -- , threeTwo = EmptySpace
-    -- , zeroThree = EmptySpace
-    -- , oneThree = EmptySpace
-    -- , twoThree = EmptySpace
-    -- , threeThree = EmptySpace
-    -- }
-    { zeroZero = Space <| Piece Plain X
-    , oneZero = Space <| Piece Plain X
-    , twoZero = Space <| Piece Plain X
-    , threeZero = Space <| Piece Plain X
-    , zeroOne = Space <| Piece Plain X
-    , oneOne = Space <| Piece Plain X
-    , twoOne = Space <| Piece Plain X
-    , threeOne = Space <| Piece Plain X
-    , zeroTwo = Space <| Piece Plain X
-    , oneTwo = Space <| Piece Plain X
-    , twoTwo = Space <| Piece Plain X
-    , threeTwo = Space <| Piece Plain X
-    , zeroThree = Space <| Piece Plain X
-    , oneThree = Space <| Piece Plain X
-    , twoThree = Space <| Piece Plain X
-    , threeThree = Space <| Piece Plain X
+    { zeroZero = EmptySpace
+    , oneZero = EmptySpace
+    , twoZero = EmptySpace
+    , threeZero = EmptySpace
+    , zeroOne = EmptySpace
+    , oneOne = EmptySpace
+    , twoOne = EmptySpace
+    , threeOne = EmptySpace
+    , zeroTwo = EmptySpace
+    , oneTwo = EmptySpace
+    , twoTwo = EmptySpace
+    , threeTwo = EmptySpace
+    , zeroThree = EmptySpace
+    , oneThree = EmptySpace
+    , twoThree = EmptySpace
+    , threeThree = EmptySpace
     }
 
 
@@ -268,7 +251,8 @@ removeFromRack piece rack =
 
 place : Piece -> BoardId -> Board -> Board
 place piece boardId board =
-    board
+    setSpace boardId (Space piece) board
+        |> Debug.log "place"
 
 
 getAvailableBoardIds : Board -> List BoardId
