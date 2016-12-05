@@ -16,12 +16,14 @@ elmLive="/opt/lampp/htdocs/elm-live/bin/elm-live.js"
 #watcher="unbuffer node --inspect -- $elmLive ${main}.elm --output=elm.js"
 
 #just run elm-live
-watcher="unbuffer $elmLive ${main}.elm --output=elm.js"
+watcher="unbuffer $elmLive ${main}.elm --output=elm.js "
 
 # Upon exit, set the terminal title
 trap "echo -e \"\e]0;closed\a\"" EXIT
 
-$watcher |
+# $@ represents the arguments to the script,
+# placing variables net to each other is string concatention
+$watcher"$@" |
   while read -r line
   do
     echo "$line"
