@@ -60,6 +60,8 @@ renderBoard selected board =
                     ++ ("L " ++ twoFifthsBoardWidthString ++ " " ++ boardHeightString)
                     ++ ("L 0 " ++ threeFifthsBoardHeightString)
                     ++ "Z"
+            , fill
+                "#FFDC00"
             ]
             []
         )
