@@ -11,9 +11,9 @@ shuffle seed list =
 
         randomTags =
             Random.step (Random.list length (Random.int 0 length)) seed
-                |> fst
+                |> Tuple.first
     in
-        List.map2 (,) randomTags list |> List.sortBy fst |> List.unzip |> snd
+        List.map2 (,) randomTags list |> List.sortBy Tuple.first |> List.unzip |> Tuple.second
 
 
 

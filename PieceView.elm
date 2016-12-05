@@ -34,27 +34,28 @@ renderRack selected rack =
         , height rackHeightString
         , viewBox ("0 0 " ++ rackWidthString ++ " " ++ rackHeightString)
         ]
-        <| [ Svg.rect
-                [ x "0"
-                , y "0"
-                , width rackWidthString
-                , height rackHeightString
-                , stroke "black"
-                , strokeWidth "2"
-                , fillOpacity "0"
-                ]
-                []
-           ]
-        ++ renderPieces selected rack
+    <|
+        [ Svg.rect
+            [ x "0"
+            , y "0"
+            , width rackWidthString
+            , height rackHeightString
+            , stroke "black"
+            , strokeWidth "2"
+            , fillOpacity "0"
+            ]
+            []
+        ]
+            ++ renderPieces selected rack
 
 
 renderPieces : Maybe Piece -> Rack -> List (Svg Msg)
 renderPieces selected rack =
-    ([1..toFloat rack.plain]
-        |> List.map (renderRackPiece Plain 0)
+    (List.range 1 rack.plain
+        |> List.map (toFloat >> renderRackPiece Plain 0)
     )
-        ++ ([1..toFloat rack.coloured]
-                |> List.map (renderRackPiece Coloured halfRackWidth)
+        ++ (List.range 1 rack.coloured
+                |> List.map (toFloat >> renderRackPiece Coloured halfRackWidth)
            )
 
 
@@ -146,8 +147,8 @@ renderPiece ((Piece colouring symbol) as piece) x y =
                 Coloured ->
                     [ fill "#0074D9" ]
     in
-        g []
-            <| circle
+        g [] <|
+            circle
                 (extraAttributes
                     ++ [ cx (toString x)
                        , cy (toString y)
@@ -157,18 +158,18 @@ renderPiece ((Piece colouring symbol) as piece) x y =
                        ]
                 )
                 []
-            :: renderSymbol symbolColour symbol x y
+                :: renderSymbol symbolColour symbol x y
 
 
 renderSymbol colour symbol x y =
     case symbol of
         X ->
             [ Svg.path
-                [ d
-                    <| ("M " ++ toString (x - symbolRadius) ++ " " ++ toString (y - symbolRadius))
-                    ++ (" l " ++ symbolDiameterString ++ " " ++ symbolDiameterString)
-                    ++ (" m " ++ minusSymbolDiameterString ++ " 0")
-                    ++ (" l " ++ symbolDiameterString ++ " " ++ minusSymbolDiameterString)
+                [ d <|
+                    ("M " ++ toString (x - symbolRadius) ++ " " ++ toString (y - symbolRadius))
+                        ++ (" l " ++ symbolDiameterString ++ " " ++ symbolDiameterString)
+                        ++ (" m " ++ minusSymbolDiameterString ++ " 0")
+                        ++ (" l " ++ symbolDiameterString ++ " " ++ minusSymbolDiameterString)
                 , stroke colour
                 , strokeWidth "4"
                 ]

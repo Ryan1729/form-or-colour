@@ -1,27 +1,31 @@
 module ShapeOrColour exposing (..)
 
-import Html.App exposing (program)
-import MaterialModel exposing (MaterialModel, defaultState)
+import Html exposing (program)
+import Model exposing (Model, defaultModel)
 import View exposing (view)
-import MaterialMsg exposing (MaterialMsg)
-import MaterialUpdate exposing (materialUpdate)
+import Msg exposing (Msg)
+import Update exposing (update)
+import Ports
 
 
-init : ( MaterialModel, Cmd MaterialMsg )
+init : ( Model, Cmd Msg )
 init =
-    ( defaultState, Cmd.none )
+    ( defaultModel, Cmd.none )
 
 
-subscriptions : MaterialModel -> Sub MaterialMsg
+subscriptions : Model -> Sub Msg
 subscriptions =
-    always Sub.none
+    Msg.NewGame
+        |> always
+        |> Ports.newGame
+        |> always
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
     program
         { init = init
-        , update = materialUpdate
+        , update = update
         , subscriptions = subscriptions
         , view = view
         }

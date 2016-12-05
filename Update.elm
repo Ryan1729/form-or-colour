@@ -105,7 +105,7 @@ cpuTurn model =
         postMovementModel =
             Extras.find (cpuWinningMove model) moves
                 |> Extras.orElseLazy (\() -> Extras.find (nextPlayerHasNoWinningMove model) moves)
-                |> Extras.orElseLazy (\() -> Random.step (Random.sample moves) (Random.initialSeed 42) |> fst)
+                |> Extras.orElseLazy (\() -> Random.step (Random.sample moves) (Random.initialSeed 42) |> Tuple.first)
                 |> Maybe.map (applyMove model)
                 |> Maybe.withDefault model
     in
