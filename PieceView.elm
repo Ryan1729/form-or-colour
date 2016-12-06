@@ -27,8 +27,8 @@ halfRackWidth =
     rackWidth / 2
 
 
-renderRack : Maybe Piece -> Rack -> Svg Msg
-renderRack selected rack =
+renderRack : Colouring -> Maybe Piece -> Rack -> Svg Msg
+renderRack selectableColouring selected rack =
     svg
         [ width rackWidthString
         , height rackHeightString
@@ -46,11 +46,11 @@ renderRack selected rack =
             ]
             []
         ]
-            ++ renderPieces selected rack
+            ++ renderPieces selectableColouring selected rack
 
 
-renderPieces : Maybe Piece -> Rack -> List (Svg Msg)
-renderPieces selected rack =
+renderPieces : Colouring -> Maybe Piece -> Rack -> List (Svg Msg)
+renderPieces selectableColouring selected rack =
     let
         ( plainTarget, colouredTarget ) =
             case selected of
@@ -66,15 +66,15 @@ renderPieces selected rack =
                             ( Nothing, Just ( toFloat rack.coloured, symbol ) )
     in
         (List.range 1 rack.plain
-            |> List.map (toFloat >> renderRackPiece plainTarget Plain 0)
+            |> List.map (toFloat >> renderRackPiece (selectableColouring == Plain) plainTarget Plain 0)
         )
             ++ (List.range 1 rack.coloured
-                    |> List.map (toFloat >> renderRackPiece colouredTarget Coloured halfRackWidth)
+                    |> List.map (toFloat >> renderRackPiece (selectableColouring == Coloured) colouredTarget Coloured halfRackWidth)
                )
 
 
-renderRackPiece : Maybe ( Float, Symbol ) -> Colouring -> Float -> Float -> Svg Msg
-renderRackPiece selected colouring x index =
+renderRackPiece : Bool -> Maybe ( Float, Symbol ) -> Colouring -> Float -> Float -> Svg Msg
+renderRackPiece allowSelecting selected colouring x index =
     let
         y =
             rackHeight * (index - 0.5) / 8
@@ -107,8 +107,8 @@ renderRackPiece selected colouring x index =
                         []
     in
         g []
-            ([ renderPiece (Piece colouring O) (oX) y
-             , renderPiece (Piece colouring X) (xX) y
+            ([ renderPiece allowSelecting (Piece colouring O) (oX) y
+             , renderPiece allowSelecting (Piece colouring X) (xX) y
              ]
                 ++ selectBox
             )
@@ -203,21 +203,34 @@ colourFromPiece piece =
             darkColour
 
 
-renderPiece : Piece -> Float -> Float -> Svg Msg
-renderPiece ((Piece colouring symbol) as piece) x y =
+
+--TODO make this take a list of attrs as andpass in the select one so we can pass in a flip on later
+
+
+renderPiece : Bool -> Piece -> Float -> Float -> Svg Msg
+renderPiece allowSelecting ((Piece colouring symbol) as piece) x y =
     let
         symbolColour =
             colourFromPiece piece
 
-        extraAttributes =
+        pieceFill =
             case colouring of
                 Plain ->
-                    [ fill "#EEEEEE" ]
+                    fill "#EEEEEE"
 
                 Coloured ->
-                    [ fill "#0074D9" ]
+                    fill "#0074D9"
+
+        extraAttributes =
+            [ pieceFill ]
     in
-        g [] <|
+        g
+            (if allowSelecting then
+                [ onClick (Select piece) ]
+             else
+                []
+            )
+        <|
             circle
                 (extraAttributes
                     ++ [ cx (toString x)

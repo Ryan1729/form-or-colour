@@ -57,7 +57,6 @@ getMoves colouring rack board =
             )
             (Model.getAvailablePieces colouring rack)
             |> Extras.shuffle (Random.initialSeed 42)
-            |> Debug.log ""
 
 
 isCPULosingModel : Model -> Bool
@@ -77,7 +76,7 @@ nextPlayerHasNoWinningMove model move =
             applyMove model move
 
         potentialFutureMoves =
-            getMoves (Model.oppositeColouring model.cpuColouring) model.rack potentialModel.board
+            getMoves model.playerColouring model.rack potentialModel.board
     in
         case Extras.find (userWinningMove potentialModel) potentialFutureMoves of
             Just _ ->
@@ -104,7 +103,7 @@ cpuTurn model =
     let
         moves : List Move
         moves =
-            getMoves model.cpuColouring model.rack model.board
+            getMoves (Model.oppositeColouring model.playerColouring) model.rack model.board
 
         postMovementModel =
             Extras.find (cpuWinningMove model) moves

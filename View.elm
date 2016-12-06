@@ -30,7 +30,7 @@ view model =
                 , ( "margin-top", "1vh" )
                 ]
             ]
-            [ PieceView.renderRack model.selected model.rack ]
+            [ PieceView.renderRack model.playerColouring model.selected model.rack ]
         , Html.div
             [ Html.Attributes.style
                 [ ( "display", "flex" )
@@ -106,7 +106,7 @@ renderSpace selected boardId space ( x, y ) =
                     Svg.text ""
 
                 Space piece ->
-                    PieceView.renderPiece piece x y
+                    PieceView.renderPiece False piece x y
 
         spaceAttriutes =
             case selected of

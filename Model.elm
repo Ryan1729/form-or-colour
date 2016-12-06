@@ -7,7 +7,7 @@ type alias Model =
     , rack : Rack
     , gameState : GameState
     , width : Float
-    , cpuColouring : Colouring
+    , playerColouring : Colouring
     }
 
 
@@ -17,7 +17,7 @@ defaultModel =
     , rack = initialRack
     , gameState = InProgress
     , width = 768
-    , cpuColouring = Coloured
+    , playerColouring = Plain
     }
 
 
