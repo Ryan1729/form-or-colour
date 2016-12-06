@@ -6,18 +6,28 @@ import View exposing (view)
 import Msg exposing (Msg)
 import Update exposing (update)
 import Ports
+import Window
+import Task
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( defaultModel, Cmd.none )
+    ( defaultModel, Task.perform extractWidth Window.size )
+
+
+extractWidth : Window.Size -> Msg
+extractWidth =
+    .width >> toFloat >> Msg.SetWidth
 
 
 subscriptions : Model -> Sub Msg
 subscriptions =
-    Msg.NewGame
+    [ Msg.NewGame
         |> always
         |> Ports.newGame
+    , Window.resizes extractWidth
+    ]
+        |> Sub.batch
         |> always
 
 

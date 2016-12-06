@@ -6,6 +6,7 @@ type alias Model =
     , selected : Maybe Piece
     , rack : Rack
     , gameState : GameState
+    , width : Float
     }
 
 
@@ -14,6 +15,7 @@ defaultModel =
     , selected = Just (Piece Plain X)
     , rack = initialRack
     , gameState = InProgress
+    , width = 768
     }
 
 

@@ -36,6 +36,9 @@ update msg model =
         Select piece ->
             ( { model | selected = Just piece }, Cmd.none )
 
+        SetWidth width ->
+            ( { model | width = width }, Cmd.none )
+
 
 type alias Move =
     ( Piece, BoardId )

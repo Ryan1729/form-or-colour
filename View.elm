@@ -14,22 +14,42 @@ view : Model -> Html Msg
 view model =
     Html.div
         [ Html.Attributes.style
-            [ ( "width", boardWidthString ++ "px" )
-            , ( "display", "flex" )
-            , ( "justify-content", "center" )
-            , ( "font-size", (boardWidth / 32 |> toString) ++ "px" )
-            , ( "flex-wrap", "wrap" )
+            [ ( "display", "flex" )
+            , ( "flex-direction"
+              , if model.width < boardWidthPlusMargin then
+                    "column"
+                else
+                    "row"
+              )
             ]
         ]
-        [ model.gameState
-            |> gameStateToString
-            |> Html.text
-        , svg
-            [ width boardWidthString
-            , height boardHeightString
-            , viewBox ("0 0 " ++ boardWidthString ++ " " ++ boardHeightString)
+        [ Html.div
+            [ Html.Attributes.style
+                [ ( "display", "flex" )
+                , ( "justify-content", "center" )
+                , ( "margin-top", "1vh" )
+                ]
             ]
-            [ renderBoard model.selected model.board
+            [ PieceView.renderRack model.selected model.rack ]
+        , Html.div
+            [ Html.Attributes.style
+                [ ( "display", "flex" )
+                , ( "justify-content", "center" )
+                , ( "text-align", "center" )
+                , ( "flex-direction", "column" )
+                , ( "margin", boardMarginString ++ "vw" )
+                ]
+            ]
+            [ model.gameState
+                |> gameStateToString
+                |> Html.text
+            , svg
+                [ width boardWidthString
+                , height boardHeightString
+                , viewBox ("0 0 " ++ boardWidthString ++ " " ++ boardHeightString)
+                ]
+                [ renderBoard model.selected model.board
+                ]
             ]
         ]
 
@@ -165,7 +185,7 @@ getSpaceCoords boardId =
 
 
 boardWidth =
-    720
+    700
 
 
 boardWidthString =
@@ -173,7 +193,7 @@ boardWidthString =
 
 
 boardHeight =
-    720
+    700
 
 
 boardHeightString =
@@ -210,3 +230,15 @@ twoFifthsBoardHeightString =
 
 threeFifthsBoardHeightString =
     toString (boardHeight * 3 / 5)
+
+
+boardMargin =
+    2
+
+
+boardMarginString =
+    toString boardMargin
+
+
+boardWidthPlusMargin =
+    boardWidth * (1 + boardMargin / 100)
