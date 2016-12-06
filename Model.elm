@@ -269,6 +269,6 @@ getAvailableBoardIds board =
 getAvailablePieces : Rack -> List Piece
 getAvailablePieces rack =
     if rack.coloured > 0 then
-        [ Piece Plain O, Piece Coloured X ]
+        [ Piece Coloured O, Piece Coloured X ]
     else
         []
