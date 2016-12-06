@@ -44,8 +44,8 @@ type alias Move =
     ( Piece, BoardId )
 
 
-getMoves : Rack -> Board -> List Move
-getMoves rack board =
+getMoves : Colouring -> Rack -> Board -> List Move
+getMoves colouring rack board =
     let
         boardIds =
             Model.getAvailableBoardIds board
@@ -55,7 +55,7 @@ getMoves rack board =
                 List.map ((,) piece)
                     boardIds
             )
-            (Model.getAvailablePieces rack)
+            (Model.getAvailablePieces colouring rack)
             |> Extras.shuffle (Random.initialSeed 42)
             |> Debug.log ""
 
@@ -77,7 +77,7 @@ nextPlayerHasNoWinningMove model move =
             applyMove model move
 
         potentialFutureMoves =
-            getMoves model.rack potentialModel.board
+            getMoves (Model.oppositeColouring model.cpuColouring) model.rack potentialModel.board
     in
         case Extras.find (userWinningMove potentialModel) potentialFutureMoves of
             Just _ ->
@@ -104,7 +104,7 @@ cpuTurn model =
     let
         moves : List Move
         moves =
-            getMoves model.rack model.board
+            getMoves model.cpuColouring model.rack model.board
 
         postMovementModel =
             Extras.find (cpuWinningMove model) moves

@@ -7,6 +7,7 @@ type alias Model =
     , rack : Rack
     , gameState : GameState
     , width : Float
+    , cpuColouring : Colouring
     }
 
 
@@ -16,6 +17,7 @@ defaultModel =
     , rack = initialRack
     , gameState = InProgress
     , width = 768
+    , cpuColouring = Coloured
     }
 
 
@@ -23,6 +25,89 @@ type GameState
     = InProgress
     | Win
     | Loss
+
+
+type Space
+    = EmptySpace
+    | Space Piece
+
+
+type Piece
+    = Piece Colouring Symbol
+
+
+type Colouring
+    = Plain
+    | Coloured
+
+
+oppositeColouring : Colouring -> Colouring
+oppositeColouring c =
+    case c of
+        Plain ->
+            Coloured
+
+        Coloured ->
+            Plain
+
+
+type Symbol
+    = X
+    | O
+
+
+type alias Rack =
+    { plain : Int
+    , coloured : Int
+    }
+
+
+initialRack : Rack
+initialRack =
+    { plain = 8
+    , coloured = 8
+    }
+
+
+removeFromRack : Piece -> Rack -> Rack
+removeFromRack piece rack =
+    case piece of
+        Piece Plain _ ->
+            { rack | plain = max 0 (rack.plain - 1) }
+
+        Piece Coloured _ ->
+            { rack | coloured = max 0 (rack.coloured - 1) }
+
+
+place : Piece -> BoardId -> Board -> Board
+place piece boardId board =
+    setSpace boardId (Space piece) board
+
+
+getAvailableBoardIds : Board -> List BoardId
+getAvailableBoardIds board =
+    boardIdPossibilities
+        |> List.filter (\id -> getSpace id board == EmptySpace)
+
+
+
+-- TODO pass what kind you are looking for into this function
+
+
+getAvailablePieces : Colouring -> Rack -> List Piece
+getAvailablePieces colouring rack =
+    case colouring of
+        Plain ->
+            if rack.plain > 0 then
+                [ Piece Plain O, Piece Plain X ]
+            else
+                []
+
+        Coloured ->
+            if rack.coloured > 0 then
+                [ Piece Coloured O, Piece Coloured X ]
+            else
+                []
 
 
 type alias Board =
@@ -207,68 +292,3 @@ setSpace boardId space board =
 
         ThreeThree ->
             { board | threeThree = space }
-
-
-type Space
-    = EmptySpace
-    | Space Piece
-
-
-type Piece
-    = Piece Colouring Symbol
-
-
-type Colouring
-    = Plain
-    | Coloured
-
-
-type Symbol
-    = X
-    | O
-
-
-type alias Rack =
-    { plain : Int
-    , coloured : Int
-    }
-
-
-initialRack : Rack
-initialRack =
-    { plain = 8
-    , coloured = 8
-    }
-
-
-removeFromRack : Piece -> Rack -> Rack
-removeFromRack piece rack =
-    case piece of
-        Piece Plain _ ->
-            { rack | plain = max 0 (rack.plain - 1) }
-
-        Piece Coloured _ ->
-            { rack | coloured = max 0 (rack.coloured - 1) }
-
-
-place : Piece -> BoardId -> Board -> Board
-place piece boardId board =
-    setSpace boardId (Space piece) board
-
-
-getAvailableBoardIds : Board -> List BoardId
-getAvailableBoardIds board =
-    boardIdPossibilities
-        |> List.filter (\id -> getSpace id board == EmptySpace)
-
-
-
--- TODO pass what kind you are looking for into this function
-
-
-getAvailablePieces : Rack -> List Piece
-getAvailablePieces rack =
-    if rack.coloured > 0 then
-        [ Piece Coloured O, Piece Coloured X ]
-    else
-        []

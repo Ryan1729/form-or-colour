@@ -51,27 +51,93 @@ renderRack selected rack =
 
 renderPieces : Maybe Piece -> Rack -> List (Svg Msg)
 renderPieces selected rack =
-    (List.range 1 rack.plain
-        |> List.map (toFloat >> renderRackPiece Plain 0)
-    )
-        ++ (List.range 1 rack.coloured
-                |> List.map (toFloat >> renderRackPiece Coloured halfRackWidth)
-           )
+    let
+        ( plainTarget, colouredTarget ) =
+            case selected of
+                Nothing ->
+                    ( Nothing, Nothing )
+
+                Just (Piece colouring symbol) ->
+                    case colouring of
+                        Plain ->
+                            ( Just ( toFloat rack.plain, symbol ), Nothing )
+
+                        Coloured ->
+                            ( Nothing, Just ( toFloat rack.coloured, symbol ) )
+    in
+        (List.range 1 rack.plain
+            |> List.map (toFloat >> renderRackPiece plainTarget Plain 0)
+        )
+            ++ (List.range 1 rack.coloured
+                    |> List.map (toFloat >> renderRackPiece colouredTarget Coloured halfRackWidth)
+               )
 
 
-renderRackPiece : Colouring -> Float -> Float -> Svg Msg
-renderRackPiece colouring x index =
+renderRackPiece : Maybe ( Float, Symbol ) -> Colouring -> Float -> Float -> Svg Msg
+renderRackPiece selected colouring x index =
     let
         y =
             rackHeight * (index - 0.5) / 8
 
         leftPieceX =
             halfPieceWidth + spacing
+
+        oX =
+            x + leftPieceX
+
+        xX =
+            x + leftPieceX * 3
+
+        selectBox =
+            case selected of
+                Nothing ->
+                    []
+
+                Just ( target, symbol ) ->
+                    if target == index then
+                        [ renderSelectBox
+                            (if symbol == O then
+                                oX
+                             else
+                                xX
+                            )
+                            y
+                        ]
+                    else
+                        []
     in
         g []
-            [ renderPiece (Piece colouring O) (x + leftPieceX) y
-            , renderPiece (Piece colouring X) (x + leftPieceX * 3) y
-            ]
+            ([ renderPiece (Piece colouring O) (oX) y
+             , renderPiece (Piece colouring X) (xX) y
+             ]
+                ++ selectBox
+            )
+
+
+selectionOffset =
+    halfPieceWidth + (spacing / 2)
+
+
+selectionWidth =
+    pieceWidth + spacing
+
+
+selectionWidthString =
+    toString selectionWidth
+
+
+renderSelectBox : Float -> Float -> Svg Msg
+renderSelectBox xPos yPos =
+    rect
+        [ x (toString (xPos - selectionOffset))
+        , y (toString (yPos - selectionOffset))
+        , strokeWidth "4"
+        , stroke "#FFDC00"
+        , fill "transparent"
+        , width selectionWidthString
+        , height selectionWidthString
+        ]
+        []
 
 
 spacing =
@@ -80,6 +146,10 @@ spacing =
 
 pieceWidth =
     (rackWidth / 4) - (2 * spacing)
+
+
+pieceWidthString =
+    toString pieceWidth
 
 
 halfPieceWidth =
