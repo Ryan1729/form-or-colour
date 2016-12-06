@@ -2,7 +2,7 @@
 
 This is a single player only version of the Italian [board game](http://boardgamegeek.com/boardgame/6818/forma-o-colore) which is also known as Forma O Colore or OXXO.
 
-I don't speak or write Italian so finding info on this game was difficult. The following is the rules as I understand them from typing text from [this image](http://boardgamegeek.com/image/1157827/forma-o-colore) into google translate.
+I don't speak or write Italian so finding info on this game was difficult. The following are the rules as I understand them from typing text from [this image](http://boardgamegeek.com/image/1157827/forma-o-colore) into google translate.
 
 ##Rules
 
