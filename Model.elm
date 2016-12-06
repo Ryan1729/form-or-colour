@@ -254,14 +254,21 @@ removeFromRack piece rack =
 place : Piece -> BoardId -> Board -> Board
 place piece boardId board =
     setSpace boardId (Space piece) board
-        |> Debug.log "place"
 
 
 getAvailableBoardIds : Board -> List BoardId
 getAvailableBoardIds board =
-    []
+    boardIdPossibilities
+        |> List.filter (\id -> getSpace id board == EmptySpace)
+
+
+
+-- TODO pass what kind you are looking for into this function
 
 
 getAvailablePieces : Rack -> List Piece
 getAvailablePieces rack =
-    []
+    if rack.coloured > 0 then
+        [ Piece Plain O, Piece Coloured X ]
+    else
+        []

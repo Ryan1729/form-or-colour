@@ -57,6 +57,7 @@ getMoves rack board =
             )
             (Model.getAvailablePieces rack)
             |> Extras.shuffle (Random.initialSeed 42)
+            |> Debug.log ""
 
 
 isCPULosingModel : Model -> Bool
