@@ -225,6 +225,77 @@ flipSpace space =
             EmptySpace
 
 
+lineExists : Colouring -> Board -> Bool
+lineExists colouring board =
+    checkLine colouring board ZeroZero OneZero TwoZero ThreeZero
+        || checkLine colouring board ZeroOne OneOne TwoOne ThreeOne
+        || checkLine colouring board ZeroTwo OneTwo TwoTwo ThreeTwo
+        || checkLine colouring board ZeroThree OneThree TwoThree ThreeThree
+        || checkLine colouring board ZeroZero ZeroOne ZeroTwo ZeroThree
+        || checkLine colouring board OneZero OneOne OneTwo OneThree
+        || checkLine colouring board TwoZero TwoOne TwoTwo TwoThree
+        || checkLine colouring board ThreeZero ThreeOne ThreeTwo ThreeThree
+        || checkLine colouring board ZeroZero OneOne TwoTwo ThreeThree
+        || checkLine colouring board ThreeZero TwoOne OneTwo ZeroThree
+
+
+checkLine : Colouring -> Board -> BoardId -> BoardId -> BoardId -> BoardId -> Bool
+checkLine colouring board id1 id2 id3 id4 =
+    case colouring of
+        --check for lines for the form player
+        Plain ->
+            symbolsMatch board id1 id2
+                && symbolsMatch board id2 id3
+                && symbolsMatch board id3 id4
+
+        --check for lines for the colour player
+        Coloured ->
+            lineColoursMatch board id1 id2
+                && lineColoursMatch board id2 id3
+                && lineColoursMatch board id3 id4
+
+
+symbolsMatch : Board -> BoardId -> BoardId -> Bool
+symbolsMatch board id1 id2 =
+    case ( getSpace id1 board, getSpace id2 board ) of
+        ( Space (Piece _ s1), Space (Piece _ s2) ) ->
+            s1 == s2
+
+        _ ->
+            False
+
+
+lineColoursMatch : Board -> BoardId -> BoardId -> Bool
+lineColoursMatch board id1 id2 =
+    case ( getSpace id1 board, getSpace id2 board ) of
+        ( Space p1, Space p2 ) ->
+            lineColourFromPiece p1 == lineColourFromPiece p2
+
+        _ ->
+            False
+
+
+type LineColour
+    = Dark
+    | Light
+
+
+lineColourFromPiece : Piece -> LineColour
+lineColourFromPiece piece =
+    case piece of
+        Piece Plain X ->
+            Dark
+
+        Piece Plain O ->
+            Light
+
+        Piece Coloured X ->
+            Light
+
+        Piece Coloured O ->
+            Dark
+
+
 getSpace : BoardId -> Board -> Space
 getSpace boardId board =
     case boardId of

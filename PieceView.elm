@@ -200,26 +200,16 @@ darkColour =
     "#111111"
 
 
-colourFromPiece piece =
-    case piece of
-        Piece Plain X ->
-            darkColour
-
-        Piece Plain O ->
-            lightColour
-
-        Piece Coloured X ->
-            lightColour
-
-        Piece Coloured O ->
-            darkColour
-
-
 renderPiece : List (Attribute Msg) -> Piece -> Float -> Float -> Svg Msg
 renderPiece extraAttributes ((Piece colouring symbol) as piece) x y =
     let
         symbolColour =
-            colourFromPiece piece
+            case Model.lineColourFromPiece piece of
+                Dark ->
+                    darkColour
+
+                Light ->
+                    lightColour
 
         pieceFill =
             case colouring of

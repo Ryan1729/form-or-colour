@@ -32,6 +32,10 @@
     newColouredGameButton.addEventListener('click', function () {
       game.ports.newColouredGame.send(null)
     })
+
+    game.ports.alert.subscribe(function(message) {
+        alert(message)
+    });
   </script>
 </body>
 </html>

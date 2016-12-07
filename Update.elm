@@ -4,6 +4,7 @@ import Msg exposing (Msg(..))
 import Model exposing (..)
 import Extras
 import Random.Pcg as Random
+import Ports
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -33,23 +34,40 @@ update msg model =
                                 , selected = Nothing
                             }
                     in
-                        advanceTurn newModel
+                        if wouldBeTie newModel then
+                            ( model, alertNoTies )
+                        else
+                            advanceTurn newModel
 
                 Nothing ->
                     ( model, Cmd.none )
-
-        Select piece ->
-            ( { model | selected = Just piece }, Cmd.none )
 
         Flip boardId ->
             let
                 newModel =
                     applyFlipMove model boardId
             in
-                advanceTurn newModel
+                if wouldBeTie newModel then
+                    ( model, alertNoTies )
+                else
+                    advanceTurn newModel
+
+        Select piece ->
+            ( { model | selected = Just piece }, Cmd.none )
 
         SetWidth width ->
             ( { model | width = width }, Cmd.none )
+
+
+alertNoTies : Cmd Msg
+alertNoTies =
+    Ports.alert "Moves that would create a tie are not allowed"
+
+
+wouldBeTie : Model -> Bool
+wouldBeTie model =
+    isCPULosingModel model
+        && isUserLosingModel model
 
 
 advanceTurn : Model -> ( Model, Cmd Msg )
@@ -92,12 +110,12 @@ getMoves colouring rack board =
 
 isCPULosingModel : Model -> Bool
 isCPULosingModel model =
-    False
+    Model.lineExists model.playerColouring model.board
 
 
 isUserLosingModel : Model -> Bool
 isUserLosingModel model =
-    False
+    Model.lineExists (Model.oppositeColouring model.playerColouring) model.board
 
 
 nextPlayerHasNoWinningMove : Model -> Move -> Bool
