@@ -105,10 +105,22 @@ renderRackPiece allowSelecting selected colouring x index =
                         ]
                     else
                         []
+
+        pieceAttributes piece =
+            if allowSelecting then
+                [ onClick (Select piece) ]
+            else
+                []
+
+        oPiece =
+            Piece colouring O
+
+        xPiece =
+            Piece colouring X
     in
         g []
-            ([ renderPiece allowSelecting (Piece colouring O) (oX) y
-             , renderPiece allowSelecting (Piece colouring X) (xX) y
+            ([ renderPiece (pieceAttributes oPiece) oPiece oX y
+             , renderPiece (pieceAttributes xPiece) xPiece xX y
              ]
                 ++ selectBox
             )
@@ -203,12 +215,8 @@ colourFromPiece piece =
             darkColour
 
 
-
---TODO make this take a list of attrs as andpass in the select one so we can pass in a flip on later
-
-
-renderPiece : Bool -> Piece -> Float -> Float -> Svg Msg
-renderPiece allowSelecting ((Piece colouring symbol) as piece) x y =
+renderPiece : List (Attribute Msg) -> Piece -> Float -> Float -> Svg Msg
+renderPiece extraAttributes ((Piece colouring symbol) as piece) x y =
     let
         symbolColour =
             colourFromPiece piece
@@ -221,18 +229,14 @@ renderPiece allowSelecting ((Piece colouring symbol) as piece) x y =
                 Coloured ->
                     fill "#0074D9"
 
-        extraAttributes =
+        extraCircleAttributes =
             [ pieceFill ]
     in
         g
-            (if allowSelecting then
-                [ onClick (Select piece) ]
-             else
-                []
-            )
+            extraAttributes
         <|
             circle
-                (extraAttributes
+                (extraCircleAttributes
                     ++ [ cx (toString x)
                        , cy (toString y)
                        , r halfPieceWidthString

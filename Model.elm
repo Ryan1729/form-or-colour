@@ -90,10 +90,6 @@ getAvailableBoardIds board =
         |> List.filter (\id -> getSpace id board == EmptySpace)
 
 
-
--- TODO pass what kind you are looking for into this function
-
-
 getAvailablePieces : Colouring -> Rack -> List Piece
 getAvailablePieces colouring rack =
     case colouring of

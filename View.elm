@@ -106,7 +106,8 @@ renderSpace selected boardId space ( x, y ) =
                     Svg.text ""
 
                 Space piece ->
-                    PieceView.renderPiece False piece x y
+                    --TODO add onclick (Flip piece) to list
+                    PieceView.renderPiece [] piece x y
 
         spaceAttriutes =
             case selected of
