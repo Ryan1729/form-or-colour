@@ -17,7 +17,7 @@ defaultModel =
     , rack = initialRack
     , gameState = InProgress
     , width = 768
-    , playerColouring = Plain
+    , playerColouring = Coloured
     }
 
 
@@ -54,6 +54,16 @@ oppositeColouring c =
 type Symbol
     = X
     | O
+
+
+oppositeSymbol : Symbol -> Symbol
+oppositeSymbol s =
+    case s of
+        X ->
+            O
+
+        O ->
+            X
 
 
 type alias Rack =
@@ -184,6 +194,21 @@ boardIdPossibilities =
     , TwoThree
     , ThreeThree
     ]
+
+
+flipBoardPiece : BoardId -> Board -> Board
+flipBoardPiece boardId board =
+    setSpace boardId (getSpace boardId board |> flipSpace) board
+
+
+flipSpace : Space -> Space
+flipSpace space =
+    case space of
+        Space (Piece colouring symbol) ->
+            Piece colouring (oppositeSymbol symbol) |> Space
+
+        EmptySpace ->
+            EmptySpace
 
 
 getSpace : BoardId -> Board -> Space

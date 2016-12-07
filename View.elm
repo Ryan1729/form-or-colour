@@ -48,7 +48,7 @@ view model =
                 , height boardHeightString
                 , viewBox ("0 0 " ++ boardWidthString ++ " " ++ boardHeightString)
                 ]
-                [ renderBoard model.selected model.board
+                [ renderBoard model.playerColouring model.selected model.board
                 ]
             ]
         ]
@@ -67,11 +67,11 @@ gameStateToString gameState =
             ""
 
 
-renderBoard : Maybe Piece -> Board -> Svg Msg
-renderBoard selected board =
+renderBoard : Colouring -> Maybe Piece -> Board -> Svg Msg
+renderBoard playerColouring selected board =
     let
         spaces =
-            renderSpaces selected board
+            renderSpaces playerColouring selected board
     in
         (Svg.path
             [ d <|
@@ -89,25 +89,32 @@ renderBoard selected board =
             |> g []
 
 
-renderSpaces selected board =
+renderSpaces playerColouring selected board =
     Model.boardIdPossibilities
         |> List.map
             (\boardId ->
-                renderSpace selected boardId (Model.getSpace boardId board) (getSpaceCoords boardId)
+                renderSpace playerColouring selected boardId (Model.getSpace boardId board) (getSpaceCoords boardId)
             )
 
 
-renderSpace : Maybe Piece -> BoardId -> Space -> ( Float, Float ) -> Svg Msg
-renderSpace selected boardId space ( x, y ) =
+renderSpace : Colouring -> Maybe Piece -> BoardId -> Space -> ( Float, Float ) -> Svg Msg
+renderSpace playerColouring selected boardId space ( x, y ) =
     let
-        piece =
+        pieceView : Svg Msg
+        pieceView =
             case space of
                 EmptySpace ->
                     Svg.text ""
 
-                Space piece ->
-                    --TODO add onclick (Flip piece) to list
-                    PieceView.renderPiece [] piece x y
+                Space ((Piece colouring _) as piece) ->
+                    let
+                        attributes =
+                            if colouring == playerColouring then
+                                [ onClick (Flip boardId) ]
+                            else
+                                []
+                    in
+                        PieceView.renderPiece attributes piece x y
 
         spaceAttriutes =
             case selected of
@@ -129,7 +136,7 @@ renderSpace selected boardId space ( x, y ) =
                 ++ spaceAttriutes
             )
             []
-        , piece
+        , pieceView
         ]
             |> g []
 

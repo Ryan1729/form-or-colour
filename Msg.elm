@@ -8,3 +8,4 @@ type Msg
     | Place BoardId
     | Select Piece
     | SetWidth Float
+    | Flip BoardId

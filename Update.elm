@@ -36,6 +36,10 @@ update msg model =
         Select piece ->
             ( { model | selected = Just piece }, Cmd.none )
 
+        --TODO count flipping as turn
+        Flip boardId ->
+            ( { model | board = Model.flipBoardPiece boardId model.board }, Cmd.none )
+
         SetWidth width ->
             ( { model | width = width }, Cmd.none )
 
@@ -50,6 +54,7 @@ getMoves colouring rack board =
         boardIds =
             Model.getAvailableBoardIds board
     in
+        --TODO add flips in as possible moves
         List.concatMap
             (\piece ->
                 List.map ((,) piece)
