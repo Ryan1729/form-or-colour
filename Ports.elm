@@ -1,4 +1,7 @@
 port module Ports exposing (..)
 
 
-port newGame : (() -> msg) -> Sub msg
+port newPlainGame : (() -> msg) -> Sub msg
+
+
+port newColouredGame : (() -> msg) -> Sub msg

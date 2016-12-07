@@ -9,8 +9,8 @@ import Random.Pcg as Random
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewGame ->
-            ( Model.defaultModel, Cmd.none )
+        NewGame playerColouring ->
+            ( Model.defaultModel playerColouring, Cmd.none )
 
         Place boardId ->
             case model.selected of

@@ -17,15 +17,20 @@
 </head>
 
 <body>
-  <div id="newGameButton"></div>
+  <div id="newGameButtons"></div>
   <div id="elm"></div>
   <script src="elm.js"></script>
   <script src="rippleButton.js"></script>
   <script>
-    let newGameButton = embed(document.getElementById('newGameButton'), 'New game');
     var game = Elm.ShapeOrColour.embed(document.getElementById('elm'));
-    newGameButton.addEventListener('click', function () {
-      game.ports.newGame.send(null)
+    var newGameButtons = document.getElementById('newGameButtons');
+    var newPlainGameButton = embed(newGameButtons, 'New game playing white pieces');
+    newPlainGameButton.addEventListener('click', function () {
+      game.ports.newPlainGame.send(null)
+    })
+    var newColouredGameButton = embed(newGameButtons, 'New game playing blue pieces');
+    newColouredGameButton.addEventListener('click', function () {
+      game.ports.newColouredGame.send(null)
     })
   </script>
 </body>

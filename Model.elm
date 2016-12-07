@@ -11,13 +11,13 @@ type alias Model =
     }
 
 
-defaultModel =
+defaultModel playerColouring =
     { board = initialBoard
-    , selected = Just (Piece Plain X)
+    , selected = Just (Piece playerColouring X)
     , rack = initialRack
     , gameState = InProgress
     , width = 768
-    , playerColouring = Coloured
+    , playerColouring = playerColouring
     }
 
 

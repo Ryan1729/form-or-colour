@@ -1,7 +1,7 @@
 module ShapeOrColour exposing (..)
 
 import Html exposing (program)
-import Model exposing (Model, defaultModel)
+import Model exposing (Model, defaultModel, Colouring(..))
 import View exposing (view)
 import Msg exposing (Msg)
 import Update exposing (update)
@@ -12,7 +12,7 @@ import Task
 
 init : ( Model, Cmd Msg )
 init =
-    ( defaultModel, Task.perform extractWidth Window.size )
+    ( defaultModel Plain, Task.perform extractWidth Window.size )
 
 
 extractWidth : Window.Size -> Msg
@@ -22,9 +22,12 @@ extractWidth =
 
 subscriptions : Model -> Sub Msg
 subscriptions =
-    [ Msg.NewGame
+    [ Msg.NewGame Plain
         |> always
-        |> Ports.newGame
+        |> Ports.newPlainGame
+    , Msg.NewGame Coloured
+        |> always
+        |> Ports.newColouredGame
     , Window.resizes extractWidth
     ]
         |> Sub.batch

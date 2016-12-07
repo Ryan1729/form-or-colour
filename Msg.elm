@@ -4,7 +4,7 @@ import Model exposing (..)
 
 
 type Msg
-    = NewGame
+    = NewGame Colouring
     | Place BoardId
     | Select Piece
     | SetWidth Float
