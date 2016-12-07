@@ -10,7 +10,17 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NewGame playerColouring ->
-            ( Model.defaultModel playerColouring, Cmd.none )
+            let
+                initialModel =
+                    Model.defaultModel playerColouring
+
+                newModel =
+                    if playerColouring == Plain then
+                        initialModel
+                    else
+                        cpuTurn initialModel
+            in
+                ( newModel, Cmd.none )
 
         Place boardId ->
             case model.selected of
