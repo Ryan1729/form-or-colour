@@ -23,12 +23,7 @@ update msg model =
                                 , selected = Nothing
                             }
                     in
-                        if isCPULosingModel newModel then
-                            ( { newModel | gameState = Win }, Cmd.none )
-                        else if isUserLosingModel newModel then
-                            ( { newModel | gameState = Loss }, Cmd.none )
-                        else
-                            ( cpuTurn newModel, Cmd.none )
+                        advanceTurn newModel
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -36,12 +31,25 @@ update msg model =
         Select piece ->
             ( { model | selected = Just piece }, Cmd.none )
 
-        --TODO count flipping as turn
         Flip boardId ->
-            ( { model | board = Model.flipBoardPiece boardId model.board }, Cmd.none )
+            let
+                newModel =
+                    { model | board = Model.flipBoardPiece boardId model.board }
+            in
+                advanceTurn newModel
 
         SetWidth width ->
             ( { model | width = width }, Cmd.none )
+
+
+advanceTurn : Model -> ( Model, Cmd Msg )
+advanceTurn newModel =
+    if isCPULosingModel newModel then
+        ( { newModel | gameState = Win }, Cmd.none )
+    else if isUserLosingModel newModel then
+        ( { newModel | gameState = Loss }, Cmd.none )
+    else
+        ( cpuTurn newModel, Cmd.none )
 
 
 type alias Move =
