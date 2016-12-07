@@ -83,8 +83,7 @@ getMoves colouring rack board =
                 |> List.map PlaceMove
 
         flipMoves =
-            --TODO filter out other colour
-            getUsedBoardIds board
+            getFlippapleBoardIds colouring board
                 |> List.map FlipMove
     in
         (placeMoves ++ flipMoves)

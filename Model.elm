@@ -100,10 +100,18 @@ getAvailableBoardIds board =
         |> List.filter (\id -> getSpace id board == EmptySpace)
 
 
-getUsedBoardIds : Board -> List BoardId
-getUsedBoardIds board =
+getFlippapleBoardIds : Colouring -> Board -> List BoardId
+getFlippapleBoardIds colouring board =
     boardIdPossibilities
-        |> List.filter (\id -> getSpace id board /= EmptySpace)
+        |> List.filter
+            (\id ->
+                case getSpace id board of
+                    EmptySpace ->
+                        False
+
+                    Space (Piece spaceColouring _) ->
+                        spaceColouring == colouring
+            )
 
 
 getAvailablePieces : Colouring -> Rack -> List Piece
