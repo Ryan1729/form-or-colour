@@ -85,11 +85,11 @@ type Move
     | FlipMove BoardId
 
 
-getMoves : Colouring -> Rack -> Board -> List Move
-getMoves colouring rack board =
+getMoves : Colouring -> Model -> List Move
+getMoves colouring model =
     let
         boardIds =
-            Model.getAvailableBoardIds board
+            Model.getAvailableBoardIds model.board
 
         placeMoves =
             List.concatMap
@@ -97,14 +97,15 @@ getMoves colouring rack board =
                     List.map ((,) piece)
                         boardIds
                 )
-                (Model.getAvailablePieces colouring rack)
+                (Model.getAvailablePieces colouring model.rack)
                 |> List.map PlaceMove
 
         flipMoves =
-            getFlippapleBoardIds colouring board
+            getFlippapleBoardIds colouring model.board
                 |> List.map FlipMove
     in
         (placeMoves ++ flipMoves)
+            |> List.filter (applyMove model >> wouldBeTie >> not)
             |> Extras.shuffle (Random.initialSeed 42)
 
 
@@ -125,7 +126,7 @@ nextPlayerHasNoWinningMove model move =
             applyMove model move
 
         potentialFutureMoves =
-            getMoves model.playerColouring model.rack potentialModel.board
+            getMoves model.playerColouring potentialModel
     in
         case Extras.find (userWinningMove potentialModel) potentialFutureMoves of
             Just _ ->
@@ -152,7 +153,7 @@ cpuTurn model =
     let
         moves : List Move
         moves =
-            getMoves (Model.oppositeColouring model.playerColouring) model.rack model.board
+            getMoves (Model.oppositeColouring model.playerColouring) model
 
         postMovementModel =
             Extras.find (cpuWinningMove model) moves
