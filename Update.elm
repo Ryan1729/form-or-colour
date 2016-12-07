@@ -34,7 +34,7 @@ update msg model =
         Flip boardId ->
             let
                 newModel =
-                    { model | board = Model.flipBoardPiece boardId model.board }
+                    applyFlipMove model boardId
             in
                 advanceTurn newModel
 
@@ -52,8 +52,9 @@ advanceTurn newModel =
         ( cpuTurn newModel, Cmd.none )
 
 
-type alias Move =
-    ( Piece, BoardId )
+type Move
+    = PlaceMove ( Piece, BoardId )
+    | FlipMove BoardId
 
 
 getMoves : Colouring -> Rack -> Board -> List Move
@@ -61,14 +62,22 @@ getMoves colouring rack board =
     let
         boardIds =
             Model.getAvailableBoardIds board
+
+        placeMoves =
+            List.concatMap
+                (\piece ->
+                    List.map ((,) piece)
+                        boardIds
+                )
+                (Model.getAvailablePieces colouring rack)
+                |> List.map PlaceMove
+
+        flipMoves =
+            --TODO filter out other colour
+            getUsedBoardIds board
+                |> List.map FlipMove
     in
-        --TODO add flips in as possible moves
-        List.concatMap
-            (\piece ->
-                List.map ((,) piece)
-                    boardIds
-            )
-            (Model.getAvailablePieces colouring rack)
+        (placeMoves ++ flipMoves)
             |> Extras.shuffle (Random.initialSeed 42)
 
 
@@ -134,8 +143,23 @@ cpuTurn model =
 
 
 applyMove : Model -> Move -> Model
-applyMove model ( piece, boardId ) =
+applyMove model move =
+    case move of
+        PlaceMove pm ->
+            applyPlaceMove model pm
+
+        FlipMove fm ->
+            applyFlipMove model fm
+
+
+applyPlaceMove : Model -> ( Piece, BoardId ) -> Model
+applyPlaceMove model ( piece, boardId ) =
     { model
         | board = Model.place piece boardId model.board
         , rack = Model.removeFromRack piece model.rack
     }
+
+
+applyFlipMove : Model -> BoardId -> Model
+applyFlipMove model boardId =
+    { model | board = Model.flipBoardPiece boardId model.board }
