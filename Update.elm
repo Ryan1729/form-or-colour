@@ -24,33 +24,39 @@ update msg model =
                 ( newModel, Cmd.none )
 
         Place boardId ->
-            case model.selected of
-                Just piece ->
-                    let
-                        newModel =
-                            { model
-                                | board = Model.place piece boardId model.board
-                                , rack = Model.removeFromRack piece model.rack
-                                , selected = Nothing
-                            }
-                    in
-                        if wouldBeTie newModel then
-                            ( model, alertNoTies )
-                        else
-                            advanceTurn newModel
+            if model.gameState == InProgress then
+                case model.selected of
+                    Just piece ->
+                        let
+                            newModel =
+                                { model
+                                    | board = Model.place piece boardId model.board
+                                    , rack = Model.removeFromRack piece model.rack
+                                    , selected = Nothing
+                                }
+                        in
+                            if wouldBeTie newModel then
+                                ( model, alertNoTies )
+                            else
+                                advanceTurn newModel
 
-                Nothing ->
-                    ( model, Cmd.none )
+                    Nothing ->
+                        ( model, Cmd.none )
+            else
+                ( model, Cmd.none )
 
         Flip boardId ->
-            let
-                newModel =
-                    applyFlipMove model boardId
-            in
-                if wouldBeTie newModel then
-                    ( model, alertNoTies )
-                else
-                    advanceTurn newModel
+            if model.gameState == InProgress then
+                let
+                    newModel =
+                        applyFlipMove model boardId
+                in
+                    if wouldBeTie newModel then
+                        ( model, alertNoTies )
+                    else
+                        advanceTurn newModel
+            else
+                ( model, Cmd.none )
 
         Select piece ->
             ( { model | selected = Just piece }, Cmd.none )
