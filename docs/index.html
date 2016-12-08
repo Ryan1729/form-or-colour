@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Shape Or Colour</title>
+    <style type="text/css">
+        html,
+        head,
+        body {
+            margin: 0;
+            height: 100%;
+            background-color: #DDDDDD;
+        }
+    </style>
+    <link rel="stylesheet" href="rippleButton.css">
+</head>
+
+<body>
+  <div id="newGameButtons"></div>
+  <div id="elm"></div>
+  <script src="elm.js"></script>
+  <script src="rippleButton.js"></script>
+  <script>
+    var game = Elm.ShapeOrColour.embed(document.getElementById('elm'));
+    var newGameButtons = document.getElementById('newGameButtons');
+    var newPlainGameButton = embed(newGameButtons, 'New game playing white pieces');
+    newPlainGameButton.addEventListener('click', function () {
+      game.ports.newPlainGame.send(null)
+    })
+    var newColouredGameButton = embed(newGameButtons, 'New game playing blue pieces');
+    newColouredGameButton.addEventListener('click', function () {
+      game.ports.newColouredGame.send(null)
+    })
+
+    game.ports.alert.subscribe(function(message) {
+        alert(message)
+    });
+  </script>
+</body>
+</html>
