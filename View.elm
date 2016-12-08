@@ -38,6 +38,7 @@ view model =
                 , ( "text-align", "center" )
                 , ( "flex-direction", "column" )
                 , ( "margin", boardMarginString ++ "vw" )
+                , ( "font", "6vw Roboto,sans-serif" )
                 ]
             ]
             [ model.gameState
@@ -86,7 +87,50 @@ renderBoard playerColouring selected board =
             []
         )
             :: spaces
+            ++ boardText playerColouring
             |> g []
+
+
+boardText : Colouring -> List (Svg Msg)
+boardText playerColouring =
+    let
+        ( text1, text2 ) =
+            case playerColouring of
+                Plain ->
+                    ( "Form", "Colour" )
+
+                Coloured ->
+                    ( "Colour", "Form" )
+
+        x1 =
+            toString (boardWidth * 1 / 4)
+
+        y1 =
+            toString (boardHeight * 3 / 4)
+
+        x2 =
+            toString (boardWidth * 3 / 4)
+
+        y2 =
+            toString (boardHeight * 1 / 4)
+    in
+        [ Svg.text_
+            [ x x1
+            , y y1
+            , transform <| "rotate(45 " ++ x1 ++ "," ++ y1 ++ ")"
+            , style <| "fill:transparent; stroke:#cf8c28;font-size:66px"
+            , textAnchor "middle"
+            ]
+            [ Svg.text text1 ]
+        , Svg.text_
+            [ x x2
+            , y y2
+            , transform <| "rotate(225 " ++ x2 ++ "," ++ y2 ++ ")"
+            , style <| "fill:transparent; stroke:#cf8c28;font-size:66px"
+            , textAnchor "middle"
+            ]
+            [ Svg.text text2 ]
+        ]
 
 
 renderSpaces playerColouring selected board =
