@@ -4,6 +4,8 @@ This is a single player only version of the Italian [board game](http://boardgam
 
 I don't speak or write Italian so finding info on this game was difficult. The following are the rules as I understand them from typing text from [this image](http://boardgamegeek.com/image/1157827/forma-o-colore) into google translate.
 
+[Live Demo](https://ryan1729.github.io/form-or-colour/)
+
 ##Rules
 
 One of the players will be the *form* player. The other player will the *colour* player.
