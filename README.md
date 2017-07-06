@@ -1,4 +1,4 @@
-#shape-or-colour
+# shape-or-colour
 
 This is a single player only version of the Italian [board game](http://boardgamegeek.com/boardgame/6818/forma-o-colore) which is also known as Forma O Colore or OXXO.
 
